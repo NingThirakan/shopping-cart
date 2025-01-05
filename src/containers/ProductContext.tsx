@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import { ProductType } from "../@types/Products"
 
 const initState: ProductType[] = [
@@ -19,15 +19,15 @@ const initState: ProductType[] = [
   }
 ]
 
-type ProductsContextType = {
+type ProductContextType = {
   products: ProductType[]
 }
 
-const ProductsContext = createContext<ProductsContextType>({} as ProductsContextType)
+const ProductContext = createContext<ProductContextType>({} as ProductContextType)
 
 type Props = { children: ReactNode }
 
-export const ProductsProvider = ({ children }: Props): ReactNode => {
+export const ProductProvider = ({ children }: Props): ReactNode => {
   const [products, setProducts] = useState<ProductType[]>([])
 
   useEffect(() => {
@@ -35,12 +35,13 @@ export const ProductsProvider = ({ children }: Props): ReactNode => {
   }, [])
 
   return (
-    <ProductsContext.Provider
+    <ProductContext.Provider
       value={{ products }}
     >
       {children}
-    </ProductsContext.Provider>
+    </ProductContext.Provider>
   )
 }
 
-export default ProductsProvider
+export const useProduct = () => useContext(ProductContext)
+export default ProductProvider
