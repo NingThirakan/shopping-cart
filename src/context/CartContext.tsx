@@ -6,10 +6,12 @@ type CartContextType = {
   cart: CartItemType[]
   totalItems: number
   totalPrice: string
+  viewCart: boolean
   onAdd: (product: ProductType) => void
-  onDelete: (product: ProductType) => void
-  onUpdate: (product: CartItemType) => void
+  onUpdate: (product: CartItemType, qty: number) => void
+  onDelete: (product: CartItemType) => void
   onSubmit: () => void
+  onViewCart: (value: boolean) => void
 }
 
 const CartContext = createContext<CartContextType>({} as CartContextType)
@@ -20,8 +22,12 @@ export const CartProvider = ({ children }: Props) => {
   const [cart, setCart] = useState<CartItemType[]>([])
   const [totalItems, setTotalItems] = useState<number>(0)
   const [totalPrice, setTotalPrice] = useState<string>('')
+  const [viewCart, setViewCart] = useState<boolean>(false)
 
-  // REDUCER_ACTION_TYPE.ADD
+  const onViewCart = useCallback((value: boolean) => {
+    setViewCart(value)
+  }, [])
+
   const onAdd = useCallback((product: ProductType) => {
     const filterCart = cart.filter(item => item.sku != product.sku)
     const itemExit = cart.find(item => item.sku === product.sku)
@@ -35,29 +41,25 @@ export const CartProvider = ({ children }: Props) => {
       }))
   }, [cart])
 
-  // REDUCER_ACTION_TYPE.REMOVE
-  const onDelete = useCallback((product: ProductType) => {
-    const filterCart = cart.filter(item => item.sku !== product.sku)
-    setCart(filterCart)
-  }, [cart])
-
-  // REDUCER_ACTION_TYPE.QUANTITY
-  const onUpdate = useCallback((product: CartItemType) => {
+  const onUpdate = useCallback((product: CartItemType, qty: number) => {
     const itemExit = cart.find(item => item.sku === product.sku)
 
     if (!itemExit) {
       throw new Error('Item must exist in cart to update quantity')
     }
 
-    // const updateItem = { ...itemExit, qty: product.qty }
+    setCart((state) =>
+      state.map(item =>
+        item.sku === product.sku ? { ...item, qty: qty } : item
+      )
+    )
+  }, [cart])
 
-    // const filterCart = cart.filter(item => item.sku != product.sku)
+  const onDelete = useCallback((product: CartItemType) => {
+    const filterCart = cart.filter(item => item.sku !== product.sku)
+    setCart(filterCart)
+  }, [cart])
 
-    // setCart(() => [...filterCart, updateItem])
-    setCart((state) => [...state, { ...itemExit, qty: itemExit.qty + 1 }])
-  }, [])
-
-  // REDUCER_ACTION_TYPE.SUBMIT
   const onSubmit = useCallback(() => {
     console.log(cart)
   }, [])
@@ -77,10 +79,12 @@ export const CartProvider = ({ children }: Props) => {
         cart,
         totalItems,
         totalPrice,
+        viewCart,
         onAdd,
         onDelete,
         onUpdate,
         onSubmit,
+        onViewCart,
       }}
     >
       {children}
