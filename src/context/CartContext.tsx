@@ -62,6 +62,7 @@ export const CartProvider = ({ children }: Props) => {
 
   const onSubmit = useCallback(() => {
     console.log(cart)
+    setCart([])
   }, [])
 
   useEffect(() => {

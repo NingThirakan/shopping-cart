@@ -7,7 +7,7 @@ export const ProductList = () => {
 	const { cart, onAdd } = useCart()
 
 	return (
-		<>
+		<main className="main main--products">
 			{products.map(product => (
 				<Product
 					key={product.sku}
@@ -16,6 +16,6 @@ export const ProductList = () => {
 					inCart={cart.some(item => item.sku === product.sku)}
 				/>
 			))}
-		</>
+		</main>
 	)
 }

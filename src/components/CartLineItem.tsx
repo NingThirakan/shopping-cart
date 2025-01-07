@@ -14,39 +14,37 @@ export const CartLineItem = ({ item, onUpdate, onDelete }: Props) => {
   const options = optionValues.map(value => <option key={`otp${value}`} value={value}>{value}</option >)
 
   return (
-    <>
-      <li className="cart_item">
-        <img src={img} alt={item.name} className="cart_img" />
-        <div aria-label="Item Name">{item.name}</div>
-        <div aria-label="Price Per Item">
-          {new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' }).format(item.price)}
-        </div>
+    <li className="cart_item">
+      <img src={img} alt={item.name} className="cart_img" />
+      <div aria-label="Item Name">{item.name}</div>
+      <div aria-label="Price Per Item">
+        {new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' }).format(item.price)}
+      </div>
 
-        <label htmlFor="itemQty" className="offscreen">Item Quantity</label>\
-        <select
-          name="itemQty"
-          id="itemQty"
-          className="cart_select"
-          value={item.qty}
-          aria-label="Item Quantity"
-          onChange={(e) => onUpdate(item, Number(e.target.value))}
-        >
-          {options}
-        </select>
+      <label htmlFor="itemQty" className="offscreen">Item Quantity</label>
+      <select
+        name="itemQty"
+        id="itemQty"
+        className="cart_select"
+        value={item.qty}
+        aria-label="Item Quantity"
+        onChange={(e) => onUpdate(item, Number(e.target.value))}
+      >
+        {options}
+      </select>
 
-        <div className="cart_item-subtotal" aria-label="Line Item Subtotal">
-          {new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' }).format(lineTotal)}
-        </div>
+      <div className="cart_item-subtotal" aria-label="Line Item Subtotal">
+        {new Intl.NumberFormat('es-US', { style: 'currency', currency: 'USD' }).format(lineTotal)}
+      </div>
 
-        <button
-          className="cart__button"
-          aria-label="Remove Item From Cart"
-          title="Remove Item From Cart"
-          onClick={() => onDelete(item)}
-        >
-          ❌
-        </button>
-      </li>
-    </>
+      <button
+        className="cart_button"
+        aria-label="Remove Item From Cart"
+        title="Remove Item From Cart"
+        onClick={() => onDelete(item)}
+      >
+        ❌
+      </button>
+    </li>
   )
 }
